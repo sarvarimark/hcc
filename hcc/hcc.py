@@ -54,12 +54,3 @@ class Channel:
                 response.status_code not in self.success_status_codes,
             max_retry_count = self.max_retry_count,
         )
-
-if __name__ == "__main__":
-    channel = Channel(
-        url = "https://jsonplaceholder.typicode.com/todos/9999",
-        timeout = 1.0,
-        max_retry_count = 3
-    )
-    response = channel.get()
-    print(response.json())
