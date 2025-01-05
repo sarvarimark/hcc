@@ -33,7 +33,6 @@ class Channel:
         self.max_retry_count = max_retry_count
         self.success_status_codes = [200, 201]
 
-    
     def get(self, params: dict[str, str] = {}, headers: dict[str, str] = {}) -> requests.Response:
         """The get method sends a GET request.
 
