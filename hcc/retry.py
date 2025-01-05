@@ -1,4 +1,3 @@
-# TODO add logs
 # TODO add docs
 # pylint: disable=C0114
 # pylint: disable=C0115
