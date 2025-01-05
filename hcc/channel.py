@@ -9,7 +9,7 @@ import requests
 from .retry import retry_function
 
 class Channel:
-    def __init__(self, url: str, timeout: float, max_retry_count: int):
+    def __init__(self, url: str, timeout: float = 2.0, max_retry_count: int | None = 5):
         self.url = url
         self.timeout = timeout
         self.max_retry_count = max_retry_count
@@ -25,7 +25,7 @@ class Channel:
             max_retry_count = self.max_retry_count,
         )
 
-    def post(self, data: dict[str, str] = {}, headers: dict[str, str] = {}) -> requests.Response:
+    def post(self, data: dict[str, str], headers: dict[str, str] = {}) -> requests.Response:
         return retry_function(
             func = lambda: requests.post(
                 self.url, timeout=self.timeout, data=data, headers=headers
@@ -35,7 +35,7 @@ class Channel:
             max_retry_count = self.max_retry_count,
         )
 
-    def put(self, data: dict[str, str] = {}, headers: dict[str, str] = {}) -> requests.Response:
+    def put(self, data: dict[str, str], headers: dict[str, str] = {}) -> requests.Response:
         return retry_function(
             func = lambda: requests.put(
                 self.url, timeout=self.timeout, data=data, headers=headers

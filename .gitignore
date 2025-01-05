@@ -1,2 +1,11 @@
-.venv
-__pycache__
+# VSCode
+.vscode/
+
+# Python
+.venv/
+__pycache__/
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
