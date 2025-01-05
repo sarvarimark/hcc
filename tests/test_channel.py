@@ -2,7 +2,7 @@
 # pylint: disable=C0115
 # pylint: disable=C0116
 from unittest.mock import patch, Mock
-from hcc.channel import Channel
+from hcc import Channel
 
 @patch('hcc.channel.requests.get')
 def test_channel_get_success(mock_get: Mock):

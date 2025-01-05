@@ -2,8 +2,9 @@
 """
 # TODO default value
 # pylint: disable=W0102
+from typing import Optional
 import requests
-from .retry import retry_function
+from .retry import retry_function, RetryPolicy
 
 class Channel:
     """The Channel class is a helper class for making HTTP requests.
@@ -13,10 +14,14 @@ class Channel:
     failed if the status code is not in the success_status_codes list (200, 201).
 
     The Channel class takes the following parameters:
-    - url: The URL to which the requests will be sent.
-    - timeout: The timeout for the requests (default is 2.0 seconds).
-    - max_retry_count: The maximum number of retries for failed requests (default is 5).
-                       If set to None, there is no limit on the number of retries.
+        url: The URL to which the requests will be sent.
+        timeout: The timeout for the requests (default is 2.0 seconds).
+        max_retry_count: The maximum number of retries for failed requests (default is 5).
+                         If set to None, there is no limit on the number of retries.
+        retry_policy: The retry policy to be used when retrying the failed requests
+                      (default is None).
+        base_delay: The base delay to be used when retrying the failed requests in milliseconds
+                    (default is None).
 
     Typical usage example:
     ```python
@@ -27,10 +32,18 @@ class Channel:
     print(response.json())
     ```
     """
-    def __init__(self, url: str, timeout: float = 2.0, max_retry_count: int | None = 5):
+    def __init__(
+        self, url: str,
+        timeout: float = 2.0,
+        max_retry_count: int | None = 5,
+        retry_policy: Optional[RetryPolicy] = None,
+        base_delay: Optional[int] = None
+    ):
         self.url = url
         self.timeout = timeout
         self.max_retry_count = max_retry_count
+        self.retry_policy = retry_policy
+        self.base_delay = base_delay
         self.success_status_codes = [200, 201]
 
     def get(self, params: dict[str, str] = {}, headers: dict[str, str] = {}) -> requests.Response:
@@ -50,6 +63,8 @@ class Channel:
             is_retry_needed = lambda response:
                 response.status_code not in self.success_status_codes,
             max_retry_count = self.max_retry_count,
+            retry_policy = self.retry_policy,
+            base_delay = self.base_delay,
         )
 
     def post(self, data: dict[str, str], headers: dict[str, str] = {}) -> requests.Response:
@@ -69,6 +84,8 @@ class Channel:
             is_retry_needed = lambda response:
                 response.status_code not in self.success_status_codes,
             max_retry_count = self.max_retry_count,
+            retry_policy = self.retry_policy,
+            base_delay = self.base_delay,
         )
 
     def put(self, data: dict[str, str], headers: dict[str, str] = {}) -> requests.Response:
@@ -88,6 +105,8 @@ class Channel:
             is_retry_needed = lambda response:
                 response.status_code not in self.success_status_codes,
             max_retry_count = self.max_retry_count,
+            retry_policy = self.retry_policy,
+            base_delay = self.base_delay,
         )
 
     def delete(self, headers: dict[str, str] = {}) -> requests.Response:
@@ -106,4 +125,6 @@ class Channel:
             is_retry_needed = lambda response:
                 response.status_code not in self.success_status_codes,
             max_retry_count = self.max_retry_count,
+            retry_policy = self.retry_policy,
+            base_delay = self.base_delay,
         )
