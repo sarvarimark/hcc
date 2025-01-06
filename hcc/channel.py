@@ -1,7 +1,8 @@
 """This module defines the Channel class, which provides methods for making HTTP requests.
 """
-# TODO default value
-# pylint: disable=W0102
+# The following can be disabled as long as the empty dictionary,
+# which is th default value at some places is not modified.
+# pylint: disable=dangerous-default-value
 from typing import Optional
 import requests
 from .retry import retry_function, RetryPolicy

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hcc"
+version = "0.1.0"
+description = "A lightweight Python package for making HTTP requests with retry functionality"
+authors = [
+    { name="Márk Sárvári", email="mark@binarybush.dev" }
+]
+# TODO add license
+# license = 
+dependencies = [
+    "requests"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
