@@ -49,7 +49,7 @@ def test_retry_function_with_exceptions_eventual_success():
     start_time = time.time()
     response = retry_function(
         func=succeed_on_third_time,
-        is_retry_needed=lambda x: False,  # Exceptions are alway retried
+        is_retry_needed=lambda x: False,  # Exceptions are always retried
         max_retry_count=max_retries,
         retry_policy=RetryPolicy.LINEAR,
         base_delay=base_delay
