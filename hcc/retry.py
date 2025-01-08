@@ -1,4 +1,4 @@
-""" Retry module for retrying functions with different policies. """
+"""Retry module for retrying functions with different policies."""
 from enum import Enum
 from typing import Callable, Any, Optional
 import math
@@ -25,7 +25,7 @@ def retry_function(
     retry_policy: Optional[RetryPolicy] = RetryPolicy.LINEAR,
     base_delay: Optional[int] = 200,
 ) -> Any:
-    """ Retry a function with different policies.
+    """Retry a function with different policies.
 
     Args:
         func: The function to be retried.
@@ -37,9 +37,13 @@ def retry_function(
 
     Returns:
         The result of the function after the first successful call or the last call.
+            
+    Raises:
+        Exception: If the maximum retry count is reached and the function still fails.
     """
     _max_retry_count = max_retry_count if max_retry_count is not None else math.inf
     _base_delay = base_delay if base_delay is not None else 200
+    _base_delay_in_seconds = _base_delay / 1000
     attempt = 0
     while True:
         attempt += 1
@@ -54,10 +58,9 @@ def retry_function(
             if not is_retry_needed(result):
                 return result
         if attempt < _max_retry_count:
-            base_delay_in_seconds = _base_delay / 1000
             if retry_policy == RetryPolicy.IMMEDIATE:
-                time.sleep(0.0)
+                pass
             elif retry_policy == RetryPolicy.LINEAR:
-                time.sleep(base_delay_in_seconds)
+                time.sleep(_base_delay_in_seconds)
             elif retry_policy == RetryPolicy.JITTER:
-                time.sleep(base_delay_in_seconds * random.uniform(0.5, 1.5))
+                time.sleep(_base_delay_in_seconds * random.uniform(0.5, 1.5))

@@ -1,5 +1,4 @@
-"""This module defines the Channel class, which provides methods for making HTTP requests.
-"""
+"""This module defines the Channel class, which provides methods for making HTTP requests."""
 from typing import Callable, Optional, Dict
 import requests
 from .retry import retry_function, RetryPolicy
@@ -34,7 +33,7 @@ class Channel:
         self,
         url: str,
         timeout: float = 2.0,
-        max_retry_count: int | None = 5,
+        max_retry_count: Optional[int] = 5,
         retry_policy: Optional[RetryPolicy] = None,
         base_delay: Optional[int] = None
     ):
