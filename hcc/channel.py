@@ -1,6 +1,6 @@
 """This module defines the Channel class, which provides methods for making HTTP requests.
 """
-from typing import Optional, Dict
+from typing import Callable, Optional, Dict
 import requests
 from .retry import retry_function, RetryPolicy
 
@@ -44,6 +44,9 @@ class Channel:
         self.retry_policy = retry_policy
         self.base_delay = base_delay
         self.success_status_codes = [200, 201]
+        self.is_retry_needed : Callable[[requests.Response], bool] = (
+            lambda response: response.status_code not in self.success_status_codes
+        )
 
     def get(
         self,
@@ -67,7 +70,7 @@ class Channel:
             func=lambda: requests.get(
                 self.url, timeout=self.timeout, params=params, headers=headers
             ),
-            is_retry_needed=lambda response: response.status_code not in self.success_status_codes,
+            is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
             base_delay=self.base_delay
@@ -93,7 +96,7 @@ class Channel:
             func=lambda: requests.post(
                 self.url, timeout=self.timeout, data=data, headers=headers
             ),
-            is_retry_needed=lambda response: response.status_code not in self.success_status_codes,
+            is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
             base_delay=self.base_delay
@@ -119,7 +122,7 @@ class Channel:
             func=lambda: requests.put(
                 self.url, timeout=self.timeout, data=data, headers=headers
             ),
-            is_retry_needed=lambda response: response.status_code not in self.success_status_codes,
+            is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
             base_delay=self.base_delay
@@ -140,7 +143,7 @@ class Channel:
             func=lambda: requests.delete(
                 self.url, timeout=self.timeout, headers=headers
             ),
-            is_retry_needed=lambda response: response.status_code not in self.success_status_codes,
+            is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
             base_delay=self.base_delay
@@ -166,7 +169,7 @@ class Channel:
             func=lambda: requests.patch(
                 self.url, timeout=self.timeout, data=data, headers=headers
             ),
-            is_retry_needed=lambda response: response.status_code not in self.success_status_codes,
+            is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
             base_delay=self.base_delay
