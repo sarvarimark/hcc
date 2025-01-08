@@ -3,32 +3,7 @@
 # pylint: disable=C0116
 import time
 from hcc import retry_function, RetryPolicy
-
-class Counter:
-    count = 0
-
-    @staticmethod
-    def next():
-        Counter.count += 1
-        print(Counter.count)
-        return Counter.count
-
-    @staticmethod
-    def reset():
-        Counter.count = 0
-
-def assert_runtime(expected_runtime: float, actual_runtime: float, tolerance: float = 0.1):
-    assert (expected_runtime * (1 - tolerance) <= actual_runtime <=
-            expected_runtime * (1 + tolerance))
-
-def assert_runtime_interval(
-    min_expected_runtime: float,
-    max_expected_runtime: float,
-    actual_runtime: float,
-    tolerance: float = 0.1
-):
-    assert (min_expected_runtime * (1 - tolerance) <= actual_runtime <=
-            max_expected_runtime * (1 + tolerance))
+from .test_utilities import Counter, assert_runtime, assert_runtime_interval
 
 def setup_function():
     Counter.reset()

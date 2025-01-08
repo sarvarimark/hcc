@@ -42,16 +42,22 @@ def retry_function(
     _base_delay = base_delay if base_delay is not None else 200
     attempt = 0
     while True:
-        result = func()
-        if attempt == _max_retry_count - 1:
-            return result
-        if not is_retry_needed(result):
-            return result
         attempt += 1
-        base_delay_in_seconds = _base_delay / 1000
-        if retry_policy == RetryPolicy.IMMEDIATE:
-            time.sleep(0.0)
-        elif retry_policy == RetryPolicy.LINEAR:
-            time.sleep(base_delay_in_seconds)
-        elif retry_policy == RetryPolicy.JITTER:
-            time.sleep(base_delay_in_seconds * random.uniform(0.5, 1.5))
+        try:
+            result = func()
+        except Exception as e:   # pylint: disable=broad-exception-caught
+            if attempt == _max_retry_count:
+                raise e
+        else:
+            if attempt == _max_retry_count:
+                return result
+            if not is_retry_needed(result):
+                return result
+        if attempt < _max_retry_count:
+            base_delay_in_seconds = _base_delay / 1000
+            if retry_policy == RetryPolicy.IMMEDIATE:
+                time.sleep(0.0)
+            elif retry_policy == RetryPolicy.LINEAR:
+                time.sleep(base_delay_in_seconds)
+            elif retry_policy == RetryPolicy.JITTER:
+                time.sleep(base_delay_in_seconds * random.uniform(0.5, 1.5))
