@@ -1,24 +1,28 @@
-"""This module defines the Channel class, which provides methods for making HTTP requests."""
+"""This module defines the Channel class, which provides methods for making HTTP requests.
+
+
+The Channel class provides methods for sending HTTP requests (GET, POST, PUT, DELETE, PATCH)
+and automatically retries requests in case of failure, based on a configurable retry policy.
+"""
 from typing import Callable, Optional, Dict
 import requests
 from .retry import retry_function, RetryPolicy
 
 class Channel:
-    """The Channel class is a helper class for making HTTP requests.
+    """The Channel class is a wrapper around the requests library that simplifies
+    making HTTP requests with retry functionality.
 
-    The Channel class is a wrapper around the requests library.
-    It also implements retry functionalities for retrying failed requests. A request is considered
-    failed if the status code is not in the success_status_codes list (200, 201).
+    It provides methods for sending GET, POST, PUT, DELETE, and PATCH requests, with automatic retry 
+    in case of failure (determined by status codes). The class supports configurable timeout, retry 
+    policies, and delay between retries.
 
     The Channel class takes the following parameters:
         url: The URL to which the requests will be sent.
         timeout: The timeout for the requests (default is 2.0 seconds).
         max_retry_count: The maximum number of retries for failed requests (default is 5).
                          If set to None, there is no limit on the number of retries.
-        retry_policy: The retry policy to be used when retrying the failed requests
-                      (default is None).
-        base_delay: The base delay to be used when retrying the failed requests in milliseconds
-                    (default is None).
+        retry_policy: The retry policy for failed requests (default is None).
+        base_delay: The base delay for retries in milliseconds (default is None).
 
     Typical usage example:
     ```python
@@ -60,6 +64,9 @@ class Channel:
 
         Returns:
             The HTTP response from the first successful or last request.
+
+        Raises:
+            Exception: If the maximum retry count is reached and the request still fails.
         """
         if params is None:
             params = {}
@@ -88,6 +95,9 @@ class Channel:
 
         Returns:
             The HTTP response from the first successful or last request.
+            
+        Raises:
+            Exception: If the maximum retry count is reached and the request still fails.
         """
         if headers is None:
             headers = {}
@@ -113,7 +123,10 @@ class Channel:
             headers: The headers for the request (default is an empty dictionary).
 
         Returns:
-            The HTTP response.
+            The HTTP response from the first successful or last request.
+
+        Raises:
+            Exception: If the maximum retry count is reached and the request still fails.
         """
         if headers is None:
             headers = {}
@@ -135,6 +148,9 @@ class Channel:
 
         Returns:
             The HTTP response from the first successful or last request.
+
+        Raises:
+            Exception: If the maximum retry count is reached and the request still fails.
         """
         if headers is None:
             headers = {}
@@ -161,6 +177,9 @@ class Channel:
 
         Returns:
             The HTTP response from the first successful or last request.
+
+        Raises:
+            Exception: If the maximum retry count is reached and the request still fails.
         """
         if headers is None:
             headers = {}

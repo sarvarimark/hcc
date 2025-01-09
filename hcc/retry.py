@@ -1,4 +1,9 @@
-"""Retry module for retrying functions with different policies."""
+"""Retry module for retrying functions with different policies.
+
+This module provides a retry mechanism with configurable retry policies such as immediate retry,
+linear delay, and jitter delay, allowing functions to be retried on failure until a specified
+maximum retry count is reached.
+"""
 from enum import Enum
 from typing import Callable, Any, Optional
 import math
@@ -8,11 +13,11 @@ import random
 class RetryPolicy(Enum):
     """The RetryPolicy enum defines the possible values for the retry policy.
     
-    The possible values are:
-        IMMEDIATE: Retry immediately.
-        LINEAR: Retry with a linear delay, which is equal to the base_delay.
-        JITTER: Retry with a jitter delay, which is a random value
-                between 0.5 and 1.5 times the base_delay.
+    The retry policies include:
+    - IMMEDIATE: Retry immediately.
+    - LINEAR: Retry with a linear delay, which is equal to the base_delay.
+    - JITTER: Retry with a jitter delay, which is a random value
+              between 0.5 and 1.5 times the base_delay.
     """
     IMMEDIATE = 1
     LINEAR = 2
