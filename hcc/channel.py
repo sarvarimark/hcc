@@ -4,16 +4,18 @@
 The Channel class provides methods for sending HTTP requests (GET, POST, PUT, DELETE, PATCH)
 and automatically retries requests in case of failure, based on a configurable retry policy.
 """
+
 from typing import Callable, Optional, Dict
 import requests
 from .retry import retry_function, RetryPolicy
+
 
 class Channel:
     """The Channel class is a wrapper around the requests library that simplifies
     making HTTP requests with retry functionality.
 
-    It provides methods for sending GET, POST, PUT, DELETE, and PATCH requests, with automatic retry 
-    in case of failure (determined by status codes). The class supports configurable timeout, retry 
+    It provides methods for sending GET, POST, PUT, DELETE, and PATCH requests, with automatic retry
+    in case of failure (determined by status codes). The class supports configurable timeout, retry
     policies, and delay between retries.
 
     The Channel class takes the following parameters:
@@ -33,13 +35,14 @@ class Channel:
     print(response.json())
     ```
     """
+
     def __init__(
         self,
         url: str,
         timeout: float = 2.0,
         max_retry_count: Optional[int] = 5,
         retry_policy: Optional[RetryPolicy] = None,
-        base_delay: Optional[int] = None
+        base_delay: Optional[int] = None,
     ):
         self.url = url
         self.timeout = timeout
@@ -47,14 +50,14 @@ class Channel:
         self.retry_policy = retry_policy
         self.base_delay = base_delay
         self.success_status_codes = [200, 201]
-        self.is_retry_needed : Callable[[requests.Response], bool] = (
+        self.is_retry_needed: Callable[[requests.Response], bool] = (
             lambda response: response.status_code not in self.success_status_codes
         )
 
     def get(
         self,
         params: Optional[Dict[str, str]] = None,
-        headers: Optional[Dict[str, str]] = None
+        headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
         """The get method sends a GET request.
 
@@ -79,13 +82,13 @@ class Channel:
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
-            base_delay=self.base_delay
+            base_delay=self.base_delay,
         )
 
     def post(
         self,
         data: Dict[str, str],
-        headers: Optional[Dict[str, str]] = None
+        headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
         """The post method sends a POST request.
 
@@ -95,7 +98,7 @@ class Channel:
 
         Returns:
             The HTTP response from the first successful or last request.
-            
+
         Raises:
             Exception: If the maximum retry count is reached and the request still fails.
         """
@@ -103,18 +106,21 @@ class Channel:
             headers = {}
         return retry_function(
             func=lambda: requests.post(
-                self.url, timeout=self.timeout, data=data, headers=headers
+                self.url,
+                timeout=self.timeout,
+                data=data,
+                headers=headers,
             ),
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
-            base_delay=self.base_delay
+            base_delay=self.base_delay,
         )
 
     def put(
         self,
         data: Dict[str, str],
-        headers: Optional[Dict[str, str]] = None
+        headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
         """The put method sends a PUT request.
 
@@ -137,10 +143,13 @@ class Channel:
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
-            base_delay=self.base_delay
+            base_delay=self.base_delay,
         )
 
-    def delete(self, headers: Optional[Dict[str, str]] = None) -> requests.Response:
+    def delete(
+        self,
+        headers: Optional[Dict[str, str]] = None,
+    ) -> requests.Response:
         """The delete method sends a DELETE request.
 
         Args:
@@ -161,13 +170,13 @@ class Channel:
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
-            base_delay=self.base_delay
+            base_delay=self.base_delay,
         )
 
     def patch(
         self,
         data: Dict[str, str],
-        headers: Optional[Dict[str, str]] = None
+        headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
         """The patch method sends a PATCH request.
 
@@ -190,5 +199,5 @@ class Channel:
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
             retry_policy=self.retry_policy,
-            base_delay=self.base_delay
+            base_delay=self.base_delay,
         )

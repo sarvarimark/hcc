@@ -9,15 +9,17 @@ from .test_utilities import Counter, assert_runtime
 BASE_DELAY = 100
 MAX_RETRIES = 5
 
+
 def setup_function():
     Counter.reset()
+
 
 def test_retry_function_with_exceptions_fail():
     Counter.reset()
 
     def always_fail():
         Counter.next()
-        raise Exception("Always fail") # pylint: disable=broad-exception-raised
+        raise Exception("Always fail")  # pylint: disable=broad-exception-raised
 
     start_time = time.time()
     with pytest.raises(Exception, match="Always fail"):
@@ -26,7 +28,7 @@ def test_retry_function_with_exceptions_fail():
             is_retry_needed=lambda x: True,
             max_retry_count=MAX_RETRIES,
             retry_policy=RetryPolicy.LINEAR,
-            base_delay=BASE_DELAY
+            base_delay=BASE_DELAY,
         )
     end_time = time.time()
 
@@ -35,6 +37,7 @@ def test_retry_function_with_exceptions_fail():
     actual_runtime = end_time - start_time
     assert_runtime(expected_runtime, actual_runtime)
 
+
 def test_retry_function_with_exceptions_eventual_success():
     Counter.reset()
 
@@ -42,7 +45,7 @@ def test_retry_function_with_exceptions_eventual_success():
         val = Counter.next()
         if val == 3:
             return val
-        raise Exception("Fail on first two attempts") # pylint: disable=broad-exception-raised
+        raise Exception("Fail on first two attempts")  # pylint: disable=broad-exception-raised
 
     start_time = time.time()
     response = retry_function(
@@ -50,7 +53,7 @@ def test_retry_function_with_exceptions_eventual_success():
         is_retry_needed=lambda x: False,  # Exceptions are always retried
         max_retry_count=MAX_RETRIES,
         retry_policy=RetryPolicy.LINEAR,
-        base_delay=BASE_DELAY
+        base_delay=BASE_DELAY,
     )
     end_time = time.time()
 

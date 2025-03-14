@@ -13,7 +13,12 @@ class Counter:
     def reset():
         Counter.count = 0
 
-def assert_runtime(expected_runtime: float, actual_runtime: float, tolerance: float = 0.05):
+
+def assert_runtime(
+    expected_runtime: float,
+    actual_runtime: float,
+    tolerance: float = 0.05,
+):
     """Asserts that the runtime is the same as the expected runtime considering a tolerance.
 
     Args:
@@ -21,14 +26,18 @@ def assert_runtime(expected_runtime: float, actual_runtime: float, tolerance: fl
         actual_runtime: The measured runtime value.
         tolerance: The tolerance range as a fraction (default is 0.05).
     """
-    assert (expected_runtime * (1 - tolerance) <= actual_runtime <=
-            expected_runtime * (1 + tolerance))
+    assert (
+        expected_runtime * (1 - tolerance)
+        <= actual_runtime
+        <= expected_runtime * (1 + tolerance)
+    )
+
 
 def assert_runtime_interval(
     min_expected_runtime: float,
     max_expected_runtime: float,
     actual_runtime: float,
-    tolerance: float = 0.05
+    tolerance: float = 0.05,
 ):
     """Asserts that the runtime is within the expected runtime interval considering a tolerance.
 
@@ -38,5 +47,8 @@ def assert_runtime_interval(
         actual_runtime: The measured runtime value.
         tolerance: The tolerance range as a fraction (default is 0.05).
     """
-    assert (min_expected_runtime * (1 - tolerance) <= actual_runtime <=
-            max_expected_runtime * (1 + tolerance))
+    assert (
+        min_expected_runtime * (1 - tolerance)
+        <= actual_runtime
+        <= max_expected_runtime * (1 + tolerance)
+    )

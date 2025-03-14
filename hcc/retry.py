@@ -4,24 +4,28 @@ This module provides a retry mechanism with configurable retry policies such as 
 linear delay, and jitter delay, allowing functions to be retried on failure until a specified
 maximum retry count is reached.
 """
+
 from enum import Enum
 from typing import Callable, Any, Optional
 import math
 import time
 import random
 
+
 class RetryPolicy(Enum):
     """The RetryPolicy enum defines the possible values for the retry policy.
-    
+
     The retry policies include:
     - IMMEDIATE: Retry immediately.
     - LINEAR: Retry with a linear delay, which is equal to the base_delay.
     - JITTER: Retry with a jitter delay, which is a random value
               between 0.5 and 1.5 times the base_delay.
     """
+
     IMMEDIATE = 1
     LINEAR = 2
     JITTER = 3
+
 
 def retry_function(
     func: Callable[[], Any],
@@ -42,7 +46,7 @@ def retry_function(
 
     Returns:
         The result of the function after the first successful call or the last call.
-            
+
     Raises:
         Exception: If the maximum retry count is reached and the function still fails.
     """
@@ -54,7 +58,7 @@ def retry_function(
         attempt += 1
         try:
             result = func()
-        except Exception as e:   # pylint: disable=broad-exception-caught
+        except Exception as e:  # pylint: disable=broad-exception-caught
             if attempt == _max_retry_count:
                 raise e
         else:
