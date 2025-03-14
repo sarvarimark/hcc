@@ -30,7 +30,7 @@ class Channel:
     ```python
     from hcc import Channel
 
-    channel = Channel("https://api.example.com")
+    channel = Channel(url="https://api.example.com")
     response = channel.get()
     print(response.json())
     ```
@@ -38,6 +38,7 @@ class Channel:
 
     def __init__(
         self,
+        *,
         url: str,
         timeout: float = 2.0,
         max_retry_count: Optional[int] = 5,
@@ -56,6 +57,7 @@ class Channel:
 
     def get(
         self,
+        *,
         params: Optional[Dict[str, str]] = None,
         headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
@@ -87,6 +89,7 @@ class Channel:
 
     def post(
         self,
+        *,
         data: Dict[str, str],
         headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
@@ -119,6 +122,7 @@ class Channel:
 
     def put(
         self,
+        *,
         data: Dict[str, str],
         headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
@@ -148,6 +152,7 @@ class Channel:
 
     def delete(
         self,
+        *,
         headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:
         """The delete method sends a DELETE request.
@@ -175,6 +180,7 @@ class Channel:
 
     def patch(
         self,
+        *,
         data: Dict[str, str],
         headers: Optional[Dict[str, str]] = None,
     ) -> requests.Response:

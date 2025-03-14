@@ -1,7 +1,7 @@
 # pylint: disable=C0114
 # pylint: disable=C0115
 # pylint: disable=C0116
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any
 from unittest.mock import patch, Mock
 from hcc import Channel
 
@@ -16,10 +16,11 @@ def run_test(
 ):
     with patch(f"hcc.channel.requests.{method}") as mock_method:
         mock_method.side_effect = side_effects
-        channel = Channel(url, max_retry_count=MAX_RETRY_COUNT)
+        channel = Channel(url=url, max_retry_count=MAX_RETRY_COUNT)
         method_to_call = getattr(channel, method)
+        kwargs: dict[str, Any] = {"data": data}
         if method in ["post", "put", "patch"]:
-            response = method_to_call(data)
+            response = method_to_call(**kwargs)
         else:
             response = method_to_call()
         return response, mock_method
