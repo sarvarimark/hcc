@@ -1,9 +1,10 @@
 # pylint: disable=C0114
 # pylint: disable=C0115
 # pylint: disable=C0116
-from typing import Optional, Dict, List, Any
+from typing import Optional, List, Any
 from unittest.mock import patch, Mock
 from hcc import Channel
+from hcc.custom_data_types import DataType
 
 MAX_RETRY_COUNT = 5
 
@@ -12,7 +13,7 @@ def run_test(
     method: str,
     url: str,
     side_effects: List[Mock],
-    data: Optional[Dict[str, str]] = None,
+    data: Optional[DataType] = None,
 ):
     with patch(f"hcc.channel.requests.{method}") as mock_method:
         mock_method.side_effect = side_effects

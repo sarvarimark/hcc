@@ -8,6 +8,7 @@ and automatically retries requests in case of failure, based on a configurable r
 from typing import Callable, Optional, Dict
 import requests
 from .retry import retry_function, RetryPolicy
+from .custom_data_types import DataType, JsonType, HeaderType
 
 
 class Channel:
@@ -59,7 +60,7 @@ class Channel:
         self,
         *,
         params: Optional[Dict[str, str]] = None,
-        headers: Optional[Dict[str, str]] = None,
+        headers: Optional[HeaderType] = None,
     ) -> requests.Response:
         """The get method sends a GET request.
 
@@ -90,13 +91,17 @@ class Channel:
     def post(
         self,
         *,
-        data: Dict[str, str],
-        headers: Optional[Dict[str, str]] = None,
+        data: Optional[DataType] = None,
+        json: Optional[JsonType] = None,
+        headers: Optional[HeaderType] = None,
     ) -> requests.Response:
         """The post method sends a POST request.
 
         Args:
-            data: The data to be sent in the body of the request (required).
+            data: The data to be sent in the body of the request (default is None).
+                Either this or `json` should be provided.
+            json: The JSON data to be sent in the body of the request (default is None).
+                Either this or `data` should be provided.
             headers: The headers for the request (default is an empty dictionary).
 
         Returns:
@@ -105,6 +110,12 @@ class Channel:
         Raises:
             Exception: If the maximum retry count is reached and the request still fails.
         """
+        assert data is not None or json is not None, (
+            "Either data or json must be provided"
+        )
+        assert data is None or json is None, "Only one of data or json can be provided"
+        if json:
+            data = None
         if headers is None:
             headers = {}
         return retry_function(
@@ -123,13 +134,17 @@ class Channel:
     def put(
         self,
         *,
-        data: Dict[str, str],
-        headers: Optional[Dict[str, str]] = None,
+        data: Optional[DataType] = None,
+        json: Optional[JsonType] = None,
+        headers: Optional[HeaderType] = None,
     ) -> requests.Response:
         """The put method sends a PUT request.
 
         Args:
-            data: The data to be sent in the body of the request (required).
+            data: The data to be sent in the body of the request (default is None).
+                Either this or `json` should be provided.
+            json: The JSON data to be sent in the body of the request (default is None).
+                Either this or `data` should be provided.
             headers: The headers for the request (default is an empty dictionary).
 
         Returns:
@@ -138,6 +153,12 @@ class Channel:
         Raises:
             Exception: If the maximum retry count is reached and the request still fails.
         """
+        assert data is not None or json is not None, (
+            "Either data or json must be provided"
+        )
+        assert data is None or json is None, "Only one of data or json can be provided"
+        if json:
+            data = None
         if headers is None:
             headers = {}
         return retry_function(
@@ -153,7 +174,7 @@ class Channel:
     def delete(
         self,
         *,
-        headers: Optional[Dict[str, str]] = None,
+        headers: Optional[HeaderType] = None,
     ) -> requests.Response:
         """The delete method sends a DELETE request.
 
@@ -181,13 +202,17 @@ class Channel:
     def patch(
         self,
         *,
-        data: Dict[str, str],
-        headers: Optional[Dict[str, str]] = None,
+        data: Optional[DataType] = None,
+        json: Optional[JsonType] = None,
+        headers: Optional[HeaderType] = None,
     ) -> requests.Response:
         """The patch method sends a PATCH request.
 
         Args:
-            data: The data to be sent in the body of the request (required).
+            data: The data to be sent in the body of the request (default is None).
+                Either this or `json` should be provided.
+            json: The JSON data to be sent in the body of the request (default is None).
+                Either this or `data` should be provided.
             headers: The headers for the request (default is an empty dictionary).
 
         Returns:
@@ -196,6 +221,12 @@ class Channel:
         Raises:
             Exception: If the maximum retry count is reached and the request still fails.
         """
+        assert data is not None or json is not None, (
+            "Either data or json must be provided"
+        )
+        assert data is None or json is None, "Only one of data or json can be provided"
+        if json:
+            data = None
         if headers is None:
             headers = {}
         return retry_function(
