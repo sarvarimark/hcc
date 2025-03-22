@@ -1,6 +1,7 @@
 # pylint: disable=C0114
 # pylint: disable=C0115
 # pylint: disable=C0116
+# ruff: noqa: E731
 import time
 from typing import Callable
 from hcc import retry_function, RetryPolicy
