@@ -23,10 +23,10 @@ jobs:
         run: uv sync --group dev
   
       - name: Format code
-        run: uv run ruff format --diff --target-version=py312 -v
+        run: uv run ruff format --diff --target-version=py313 -v
 
       - name: Lint code
-        run: uv run ruff check --diff --target-version=py312 -v
+        run: uv run ruff check --diff --target-version=py313 -v
 
       - name: Run tests
         run: uv run pytest
