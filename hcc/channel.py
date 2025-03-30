@@ -80,7 +80,10 @@ class Channel:
             headers = {}
         return retry_function(
             func=lambda: requests.get(
-                self.url, timeout=self.timeout, params=params, headers=headers
+                self.url,
+                timeout=self.timeout,
+                params=params,
+                headers=headers,
             ),
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
@@ -123,6 +126,7 @@ class Channel:
                 self.url,
                 timeout=self.timeout,
                 data=data,
+                json=json,
                 headers=headers,
             ),
             is_retry_needed=self.is_retry_needed,
@@ -163,7 +167,11 @@ class Channel:
             headers = {}
         return retry_function(
             func=lambda: requests.put(
-                self.url, timeout=self.timeout, data=data, headers=headers
+                self.url,
+                timeout=self.timeout,
+                data=data,
+                json=json,
+                headers=headers,
             ),
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
@@ -191,7 +199,9 @@ class Channel:
             headers = {}
         return retry_function(
             func=lambda: requests.delete(
-                self.url, timeout=self.timeout, headers=headers
+                self.url,
+                timeout=self.timeout,
+                headers=headers,
             ),
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,
@@ -231,7 +241,11 @@ class Channel:
             headers = {}
         return retry_function(
             func=lambda: requests.patch(
-                self.url, timeout=self.timeout, data=data, headers=headers
+                self.url,
+                timeout=self.timeout,
+                data=data,
+                json=json,
+                headers=headers,
             ),
             is_retry_needed=self.is_retry_needed,
             max_retry_count=self.max_retry_count,

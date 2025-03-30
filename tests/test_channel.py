@@ -3,8 +3,7 @@
 # pylint: disable=C0116
 from typing import Optional, List, Any
 from unittest.mock import patch, Mock
-from hcc import Channel
-from hcc.custom_data_types import DataType
+from hcc import Channel, DataType
 
 MAX_RETRY_COUNT = 5
 
