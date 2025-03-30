@@ -29,13 +29,13 @@ jobs:
         run: uvx ruff check --target-version=py313 -v .
 
       - name: Python type check
-        run: uvx mypy hcc/
+        run: uv run mypy hcc/
 
       - name: Validate project metadata
         run: uvx --from 'validate-pyproject[all,store]' validate-pyproject pyproject.toml
 
       - name: Run tests
-        run: uvx pytest
+        run: uv run pytest
 
       - name: Check test coverage
         run: uvx coverage report --fail-under=100
