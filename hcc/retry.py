@@ -7,9 +7,12 @@ maximum retry count is reached.
 
 from enum import Enum
 from typing import Callable, Any, Optional
+import logging
 import math
 import time
 import random
+
+logger = logging.getLogger("hcc.retry")
 
 
 class RetryPolicy(Enum):
@@ -55,17 +58,48 @@ def retry_function(
     _base_delay_in_seconds = _base_delay / 1000
     attempt = 0
     while True:
+        result = None
         attempt += 1
         try:
             result = func()
         except Exception as e:  # pylint: disable=broad-exception-caught
             if attempt == _max_retry_count:
+                logger.warning(
+                    "Attempt %d/%d returning with exception: %s",
+                    attempt,
+                    _max_retry_count,
+                    str(e),
+                )
                 raise e
+            logger.warning(
+                "Attempt %d/%d failed with exception: %s",
+                attempt,
+                _max_retry_count,
+                str(e),
+            )
         else:
             if attempt == _max_retry_count:
+                logger.info(
+                    "Attempt %d/%d returning with: %s",
+                    attempt,
+                    _max_retry_count,
+                    result,
+                )
                 return result
             if not is_retry_needed(result):
+                logger.info(
+                    "Attempt %d/%d returning with: %s",
+                    attempt,
+                    _max_retry_count,
+                    result,
+                )
                 return result
+            logger.info(
+                "Attempt %d/%d failed with error result: %s",
+                attempt,
+                _max_retry_count,
+                result,
+            )
         if attempt < _max_retry_count:
             if retry_policy == RetryPolicy.IMMEDIATE:
                 pass

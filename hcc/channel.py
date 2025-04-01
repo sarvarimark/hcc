@@ -6,9 +6,13 @@ and automatically retries requests in case of failure, based on a configurable r
 """
 
 from typing import Callable, Optional, Dict
+import logging
 import requests
 from .retry import retry_function, RetryPolicy
 from .custom_data_types import DataType, JsonType, HeaderType
+
+
+logger = logging.getLogger("hcc.request")
 
 
 class Channel:
@@ -55,6 +59,18 @@ class Channel:
         self.is_retry_needed: Callable[[requests.Response], bool] = (
             lambda response: response.status_code not in self.success_status_codes
         )
+        logger.info(
+            (
+                "Channel created: id: %s, URL: %s, timeout: %s, "
+                "max_retry_count: %s, retry_policy: %s, base_delay: %s"
+            ),
+            id(self),
+            self.url,
+            self.timeout,
+            self.max_retry_count,
+            self.retry_policy,
+            self.base_delay,
+        )
 
     def get(
         self,
@@ -78,7 +94,13 @@ class Channel:
             params = {}
         if headers is None:
             headers = {}
-        return retry_function(
+        logger.info(
+            "GET request: channel: %s, params: %s, headers: %s",
+            id(self),
+            params,
+            headers,
+        )
+        response = retry_function(
             func=lambda: requests.get(
                 self.url,
                 timeout=self.timeout,
@@ -90,6 +112,8 @@ class Channel:
             retry_policy=self.retry_policy,
             base_delay=self.base_delay,
         )
+        logger.info("GET response: %s", response)
+        return response
 
     def post(
         self,
@@ -121,7 +145,14 @@ class Channel:
             data = None
         if headers is None:
             headers = {}
-        return retry_function(
+        logger.info(
+            "POST request: channel: %s, data: %s, json: %s, headers: %s",
+            id(self),
+            data,
+            json,
+            headers,
+        )
+        response = retry_function(
             func=lambda: requests.post(
                 self.url,
                 timeout=self.timeout,
@@ -134,6 +165,8 @@ class Channel:
             retry_policy=self.retry_policy,
             base_delay=self.base_delay,
         )
+        logger.info("POST response: %s", response)
+        return response
 
     def put(
         self,
@@ -165,7 +198,14 @@ class Channel:
             data = None
         if headers is None:
             headers = {}
-        return retry_function(
+        logger.info(
+            "PUT request: channel: %s, data: %s, json: %s, headers: %s",
+            id(self),
+            data,
+            json,
+            headers,
+        )
+        response = retry_function(
             func=lambda: requests.put(
                 self.url,
                 timeout=self.timeout,
@@ -178,6 +218,8 @@ class Channel:
             retry_policy=self.retry_policy,
             base_delay=self.base_delay,
         )
+        logger.info("PUT response: %s", response)
+        return response
 
     def delete(
         self,
@@ -197,7 +239,12 @@ class Channel:
         """
         if headers is None:
             headers = {}
-        return retry_function(
+        logger.info(
+            "DELETE request: channel: %s, headers: %s",
+            id(self),
+            headers,
+        )
+        response = retry_function(
             func=lambda: requests.delete(
                 self.url,
                 timeout=self.timeout,
@@ -208,6 +255,8 @@ class Channel:
             retry_policy=self.retry_policy,
             base_delay=self.base_delay,
         )
+        logger.info("DELETE response: %s", response)
+        return response
 
     def patch(
         self,
@@ -239,7 +288,14 @@ class Channel:
             data = None
         if headers is None:
             headers = {}
-        return retry_function(
+        logger.info(
+            "PATCH request: channel: %s, data: %s, json: %s, headers: %s",
+            id(self),
+            data,
+            json,
+            headers,
+        )
+        response = retry_function(
             func=lambda: requests.patch(
                 self.url,
                 timeout=self.timeout,
@@ -252,3 +308,5 @@ class Channel:
             retry_policy=self.retry_policy,
             base_delay=self.base_delay,
         )
+        logger.info("PATCH response: %s", response)
+        return response
